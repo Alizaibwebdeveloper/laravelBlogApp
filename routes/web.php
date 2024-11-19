@@ -8,6 +8,14 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+/*
+
+Testing Routes
+
+*/
+
+Route::view('/example-page', 'example-page');
+Route::view('/example-auth', 'example-auth');
 
 /*
 
