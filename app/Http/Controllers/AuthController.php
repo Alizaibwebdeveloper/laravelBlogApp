@@ -8,6 +8,12 @@ use App\Models\User;
 use App\UserStatus;
 use App\UserType;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
+use Illuminate\Support\Carbon;
+use App\Helpers\CMail;
+
 
 class AuthController extends Controller
 {
@@ -76,6 +82,75 @@ class AuthController extends Controller
             return redirect()->route('admin.dashboard');
         }else{
             return redirect()->route('admin.login')->withInput()->with('fail', 'Incorrect password');
+        }
+    } // End Method
+
+    public function SendPasswordResetLink(Request $request){
+
+        // validatet the form
+
+        $request->validate([
+            'email'=> 'required|email|exists:users,email',
+
+        ],[
+            'email.required'=> 'The :attribute is required',
+            'email.email'=> 'Invalid email address',
+            'email.exists'=> 'we cannot find any user with this email address'
+        ]);
+
+        // get UserDetail
+
+        $user = User::where('email', $request->email)->first();
+
+        // Generate Token 
+
+        $token = base64_encode(Str::random(64));
+
+        // check if there is an existing token
+
+        $oldToken = DB::table('password_reset_tokens')
+                    ->where('email', $user->email)
+                    ->first();
+
+        if($oldToken){
+            DB::table('password_reset_tokens')
+            ->where('email', $user->email)
+            ->update([
+                'token'=>$token,
+                'created_at'=> Carbon::now(),
+
+            ]);
+        }else{
+            // Add new password reset Token 
+            DB::table('password_reset_tokens')->insert([
+                'email'=> $user->email,
+                'token'=> $token,
+                'created_at'=> Carbon::now()
+            ]);
+
+        }
+
+        // Create clickable action link
+
+        $actionLink = route('admin.reset_password_form',['token'=> $token]);
+        $data = array(
+            'actionlink'=> $actionLink,
+            'user'=> $user
+        );
+        
+        $mailBody = view('email-templates.forgot-template', $data)->render();
+        $mailConfig = array(
+            'recipient_address'=> $user->email,
+            'recipient_name'=> $user->name,
+            'subject'=> 'Reset password',
+            'body'=> $mailBody,
+
+        );
+
+        if(CMail::send($mailConfig)){
+            return redirect()->route('admin.forgot')->with('success', 'We have e-mailed your password reset link.');
+        }else{
+            return redirect()->route('admin.forgot')->with('fail', 'Something went wrong password Resetting link not sent. Try again later.');
         }
     }
 }
