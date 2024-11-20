@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use Auth;
 use Illuminate\Http\Request;
 
 class AdminController extends Controller
@@ -14,4 +15,14 @@ class AdminController extends Controller
 
         return view('back.pages.dashboard', $data);
     }
+
+    public function logoutHandler(Request $request){
+
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        return redirect()->route('admin.login')->with('fail', 'You are now logout');
+        
+    }
+    // End method
 }

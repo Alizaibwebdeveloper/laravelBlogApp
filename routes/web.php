@@ -29,6 +29,7 @@ Route::prefix('admin')->name('admin.')->group(callback: function(){
         Route::controller(AuthController::class)->group(function(){
 
             Route::get('/login',action: 'loginForm')->name('login');
+            Route::post('/login', 'login_handler')->name('login_handler');
             Route::get('/forgot-password','forgotForm')->name('forgot');
         });
     });
@@ -36,6 +37,7 @@ Route::prefix('admin')->name('admin.')->group(callback: function(){
     Route::middleware([])->group(function(){
         Route::controller(AdminController::class)->group(function(){
             Route::get('/dashboard','adminDashboard')->name('dashboard');
+            Route::post('/logout','logoutHandler')->name('logout');
 
         });
     });
