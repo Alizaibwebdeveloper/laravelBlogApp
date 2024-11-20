@@ -24,7 +24,7 @@ Admin Routes
 */
 
 Route::prefix('admin')->name('admin.')->group(callback: function(){
-    Route::middleware([])->group(function(){
+    Route::middleware(['guest'])->group(function(){
 
         Route::controller(AuthController::class)->group(function(){
 
@@ -34,7 +34,7 @@ Route::prefix('admin')->name('admin.')->group(callback: function(){
         });
     });
 
-    Route::middleware([])->group(function(){
+    Route::middleware(['auth'])->group(function(){
         Route::controller(AdminController::class)->group(function(){
             Route::get('/dashboard','adminDashboard')->name('dashboard');
             Route::post('/logout','logoutHandler')->name('logout');
