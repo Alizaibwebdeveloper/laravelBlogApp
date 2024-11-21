@@ -14,6 +14,7 @@ class AdminController extends Controller
             'pageTitle' => 'Dashboard'
         ];
 
+        
         return view('back.pages.dashboard', $data);
     }
 
