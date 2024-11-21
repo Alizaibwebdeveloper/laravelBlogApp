@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use Auth;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use App\Models\User;
 
 class AdminController extends Controller
 {
@@ -25,4 +26,13 @@ class AdminController extends Controller
         
     }
     // End method
+
+    public function profileView(Request $request){
+
+        $data = [
+            'pageTitle'=> 'Profile'
+
+        ];
+        return view('back.pages.profile', $data);
+    }// End METHOD
 }

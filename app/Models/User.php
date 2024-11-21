@@ -54,4 +54,9 @@ class User extends Authenticatable
             'type'=> UserType::class
         ];
     }
+
+    public function getpictureAttribute($value){
+
+        return $value ? asset('/images/users'.$value) : asset('/images/users/default-avatar.png');
+    }
 }
