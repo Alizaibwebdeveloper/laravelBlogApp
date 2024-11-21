@@ -92,6 +92,7 @@
             <h4>Hi {{ $user->name }},</h4>
             <p>We received a request to reset your password. Click the button below to reset it:</p>
             <a href="{{$actionlink  }}"  target="_blank" class="button">Reset Password</a>
+            <p>This link is valid for 15 minuts</p>
             <p>If you didn't request a password reset, please ignore this email or contact support if you have concerns.</p>
             <p>Thank you,</p>
             <p>The {{ config('app.name') }} Team</p>
