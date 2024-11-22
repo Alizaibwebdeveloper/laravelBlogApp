@@ -11,7 +11,7 @@
 
         <x-form-alerts></x-form-alerts>
         
-        @csrf
+        @csrf                
         
         <div class="input-group custom mb-1">
             <input type="text" class="form-control form-control-lg" placeholder="Username/Email" name="login_id" value="{{old('login_id')}}">
