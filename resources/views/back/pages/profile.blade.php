@@ -25,3 +25,44 @@
 
 @livewire('admin.profile')
 @endsection
+
+@push('scripts')
+<script>
+    $('input[type="file"][id="profilePictureFile"]').kropify({
+        preview: 'img#profilePicturePreview', // Correct preview selector
+        viewMode: 1,
+        aspectRatio: 1, // 1:1 for square crop
+        cancelButtonText: 'Cancel',
+        resetButtonText: 'Reset',
+        cropButtonText: 'Crop & update',
+        processURL: '{{route('admin.update_profile_picture')}}', // Replace with your API endpoint
+        maxSize: 2097152, // 2MB file size limit
+        showLoader: true,
+        animationClass: 'headShake', // Animation effect
+        fileName: 'avatar',
+        success: function (data) {
+            if(data.status==1){
+                $().notifa({
+                    vers:2,
+                    cssClass:'success',
+                    html:data.message,
+                    delay:2500,
+                    
+                });
+            }else{
+                $().notifa({
+                    vers:2,
+                    cssClass:'error',
+                    html:data.message,
+                    delay:2500,
+                    
+                });
+            }
+        },
+        errors: function (error, text) {
+            console.log('Error:', text);
+        },
+    });
+</script>
+
+@endpush
